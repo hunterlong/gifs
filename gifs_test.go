@@ -18,7 +18,7 @@ func init() {
 func TestSimpleYoutube(t *testing.T) {
 
 	input := &Import{
-		Source: "https://www.youtube.com/watch?v=e9GZ_GD4R4s",
+		Source: "https://www.youtube.com/watch?v=V6wrI6DEZFk",
 	}
 
 	response, err := input.Create()
