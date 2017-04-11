@@ -73,6 +73,22 @@ fmt.Println("Saved gif: ", gifFile)
 
 ```
 
+# Upload MP4
+```go
+input := &gifs.New{
+    File:  "video.mp4",
+    Title: "Nice Video Title",
+    Tags:  []string{"gifs", "are", "awesome"},
+}
+
+response, err := input.Upload()
+if err != nil {
+    panic(err)
+}
+
+fmt.Println("Gif URL: ", response.Files.Gif)
+```
+
 # Bulk Upload
 ```go
 // work in progress!
