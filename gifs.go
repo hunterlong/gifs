@@ -82,9 +82,14 @@ func SendRequest(input []byte, method string) ([]byte, error) {
 	resp, err := client.Do(req)
 	if err != nil {
 		log.Println("Could not connect to server at: ", ApiEndpoint)
+		return nil, err
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Println("Could not read response from API ")
+		return nil, err
+	}
 	body = bytes.TrimPrefix(body, []byte("\xef\xbb\xbf"))
 	return body, err
 }
@@ -132,12 +137,12 @@ func UploadRequest(i *New, fileName string) ([]byte, error) {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		panic(err)
+		return nil, err
 	} else {
 		body = &bytes.Buffer{}
 		_, err := body.ReadFrom(resp.Body)
 		if err != nil {
-			panic(err)
+			return nil, err
 		}
 		resp.Body.Close()
 	}
@@ -150,7 +155,7 @@ func DownloadFile(n string, rawURL string) string {
 	file, err := os.Create(n)
 
 	if err != nil {
-		panic(err)
+		return nil
 	}
 	defer file.Close()
 
@@ -171,7 +176,7 @@ func DownloadFile(n string, rawURL string) string {
 	io.Copy(file, resp.Body)
 
 	if err != nil {
-		panic(err)
+		return nil
 	}
 	return n
 }
