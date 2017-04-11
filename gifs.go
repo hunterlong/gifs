@@ -16,6 +16,10 @@ const ApiEndpoint string = "https://api.gifs.com"
 
 var Authentication string
 
+type Bulk struct {
+	New []New
+}
+
 type New struct {
 	Source      string       `json:"source,omitempty"`
 	File        string       `json:"-"`
@@ -94,6 +98,19 @@ func SendRequest(input []byte, method string) ([]byte, error) {
 	return body, err
 }
 
+func (i *Bulk) Upload() (*ImportResponse, error) {
+	for _, v := range i.New {
+		log.Println("Uploading file: ", v.File)
+		response, err := v.Upload()
+		if err != nil {
+			log.Println("Failed to Upload: ", v.File)
+		} else {
+			log.Println("Successful Upload: ", response)
+		}
+	}
+	return nil, nil
+}
+
 func (i *New) Upload() (*ImportResponse, error) {
 	var err error
 	res, err := UploadRequest(i, i.File)
@@ -114,7 +131,6 @@ func UploadRequest(i *New, fileName string) ([]byte, error) {
 		return nil, err
 	}
 	defer file.Close()
-
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
 	part, err := writer.CreateFormFile("file", filepath.Base(path))
@@ -122,16 +138,13 @@ func UploadRequest(i *New, fileName string) ([]byte, error) {
 		return nil, err
 	}
 	_, err = io.Copy(part, file)
-
 	if i.Title != "" {
 		writer.WriteField("title", i.Title)
 	}
-
 	err = writer.Close()
 	if err != nil {
 		return nil, err
 	}
-
 	req, err := http.NewRequest("POST", ApiEndpoint+"/media/upload", body)
 	req.Header.Set("Content-Type", writer.FormDataContentType())
 	client := &http.Client{}
@@ -146,37 +159,31 @@ func UploadRequest(i *New, fileName string) ([]byte, error) {
 		}
 		resp.Body.Close()
 	}
-
 	return body.Bytes(), err
 }
 
 func DownloadFile(n string, rawURL string) string {
-
 	file, err := os.Create(n)
-
 	if err != nil {
-		return nil
+		return ""
 	}
 	defer file.Close()
-
 	check := http.Client{
 		CheckRedirect: func(r *http.Request, via []*http.Request) error {
 			r.URL.Opaque = r.URL.Path
 			return nil
 		},
 	}
-
 	resp, err := check.Get(rawURL) // add a filter to check redirect
-
 	if err != nil {
-		panic(err)
+		return ""
 	}
 	defer resp.Body.Close()
 
 	io.Copy(file, resp.Body)
 
 	if err != nil {
-		return nil
+		return ""
 	}
 	return n
 }

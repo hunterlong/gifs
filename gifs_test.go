@@ -101,3 +101,33 @@ func TestSaveGif(t *testing.T) {
 	t.Log("Saved gif: ", gifFile)
 
 }
+
+func TestBulkUpload(t *testing.T) {
+
+	files := []New{
+		{
+			File:  "echo-hereweare.mp4",
+			Title: "New Video",
+		},
+		{
+			File:  "echo-hereweare.mp4",
+			Title: "New Video 2",
+		},
+		{
+			File:  "echo-hereweare.mp4",
+			Title: "New Video 3",
+		},
+	}
+
+	bulk := Bulk{
+		New: files,
+	}
+
+	response, err := bulk.Upload()
+	if err != nil {
+
+	}
+
+	t.Log(response)
+
+}
