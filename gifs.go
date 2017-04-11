@@ -3,15 +3,13 @@ package gifs
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"mime/multipart"
 	"net/http"
-	"net/url"
 	"os"
 	"path/filepath"
-	"strings"
 )
 
 const ApiEndpoint string = "https://api.gifs.com"
@@ -65,7 +63,6 @@ func (i *New) Create() (*ImportResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(string(req))
 	res, err := SendRequest(req, "/media/import")
 	if err != nil {
 		return nil, err
@@ -84,12 +81,11 @@ func SendRequest(input []byte, method string) ([]byte, error) {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		fmt.Println("Could not connect to server at: ", ApiEndpoint)
+		log.Println("Could not connect to server at: ", ApiEndpoint)
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	body = bytes.TrimPrefix(body, []byte("\xef\xbb\xbf"))
-	fmt.Println(string(body))
 	return body, err
 }
 
@@ -99,7 +95,6 @@ func (i *New) Upload() (*ImportResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(res)
 	var d Success
 	json.Unmarshal(res, &d)
 	return &d.Response, err
@@ -152,18 +147,6 @@ func UploadRequest(i *New, fileName string) ([]byte, error) {
 
 func DownloadFile(n string, rawURL string) string {
 
-	fileURL, err := url.Parse(rawURL)
-
-	if err != nil {
-		panic(err)
-	}
-
-	path := fileURL.Path
-
-	segments := strings.Split(path, "/")
-
-	fileName := segments[4]
-
 	file, err := os.Create(n)
 
 	if err != nil {
@@ -190,5 +173,5 @@ func DownloadFile(n string, rawURL string) string {
 	if err != nil {
 		panic(err)
 	}
-	return fileName
+	return n
 }
