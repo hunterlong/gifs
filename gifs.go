@@ -8,13 +8,14 @@ import (
 	"io/ioutil"
 	"mime/multipart"
 	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
-	"net/url"
 	"strings"
 )
 
 const ApiEndpoint string = "https://api.gifs.com"
+
 var Authentication string
 
 type New struct {
@@ -148,7 +149,6 @@ func UploadRequest(i *New, fileName string) ([]byte, error) {
 
 	return body.Bytes(), err
 }
-
 
 func DownloadFile(n string, rawURL string) string {
 

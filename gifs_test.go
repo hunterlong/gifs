@@ -1,11 +1,7 @@
 package gifs
 
 import (
-	"io"
-	"net/http"
-	"net/url"
 	"os"
-	"strings"
 	"testing"
 )
 
@@ -89,7 +85,6 @@ func TestUpload(t *testing.T) {
 	t.Log("Embed URL: ", response.Embed)
 }
 
-
 func TestSaveGif(t *testing.T) {
 
 	file := &New{
@@ -103,6 +98,6 @@ func TestSaveGif(t *testing.T) {
 
 	gifFile := response.SaveGif()
 
-	t.Log("Saved gif: ",gifFile)
+	t.Log("Saved gif: ", gifFile)
 
 }
