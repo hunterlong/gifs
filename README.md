@@ -15,16 +15,27 @@ Gifs.com API is already easy, but this simplifies it even more. You'll be able t
 
 # Simple Usage
 ```go
-import "github.com/hunterlong/gifs"
-
-func main() {
-
-  input := &Import{
-    Source: "https://www.youtube.com/watch?v=dDmQ0byhus4",
-  }
-
-  response := input.Create()
-
-  fmt.Println("Gifs.com Gif URL: ",response.Files.Gif)
+input := &Import{
+  Source: "https://www.youtube.com/watch?v=dDmQ0byhus4",
 }
+
+response := input.Create()
+
+fmt.Println("Gifs.com Gif URL: ",response.Files.Gif)
+```
+
+# Advanced Usage
+```go
+input := &Import{
+  Source: "https://www.youtube.com/watch?v=dDmQ0byhus4",
+  Title: "Cute Kitten Drinking From Sink",
+  Tags: []string{"cute","kitten","drinking"},
+  Attribution: &Attribution{
+    Site: "twitter",
+    User: "stronghold2d",
+  },
+  Safe: true,
+}
+
+response, err := input.Create()
 ```
