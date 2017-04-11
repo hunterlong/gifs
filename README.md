@@ -13,7 +13,7 @@ Gifs.com API is already easy, but this simplifies it even more. You'll be able t
 
 <p></p>
 
-##### Create a Gif from YouTube
+# Simple Usage
 ```go
 import "github.com/hunterlong/gifs"
 
