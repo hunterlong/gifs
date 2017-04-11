@@ -1,9 +1,5 @@
 # gifs.com Golang Package
 
-<img align="right" src="https://j.gifs.com/O7vg7p.jpg">
-Golang is awesome, and so are gifs. Using gifs.com API you can create gifs from many many different sources.
-Gifs.com API is already easy, but this simplifies it even more.
-<p></p>
 
 ##### Create a Gif from YouTube
 ```go
