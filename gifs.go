@@ -1,77 +1,64 @@
 package gifs
 
 import (
-	"fmt"
-	"net/http"
 	"bytes"
-	"io/ioutil"
 	"encoding/json"
-	"mime/multipart"
-	"path/filepath"
+	"fmt"
 	"io"
+	"io/ioutil"
+	"mime/multipart"
+	"net/http"
 	"os"
+	"path/filepath"
+	"net/url"
+	"strings"
 )
 
 const ApiEndpoint string = "https://api.gifs.com"
 var Authentication string
 
-
-type Import struct {
-	Source string `json:"source,omitempty"`
-	File string `json:"-"`
-	Title string `json:"title,omitempty"`
-	Tags []string `json:"tags,omitempty"`
+type New struct {
+	Source      string       `json:"source,omitempty"`
+	File        string       `json:"-"`
+	Title       string       `json:"title,omitempty"`
+	Tags        []string     `json:"tags,omitempty"`
 	Attribution *Attribution `json:"attribution,omitempty"`
-	Safe bool `json:"nsfw,omitempty"`
+	Safe        bool         `json:"nsfw,omitempty"`
 }
 
 type Attribution struct {
 	Site string `json:"site,omitempty"`
 	User string `json:"user,omitempty"`
-	Url string `json:"url,omitempty"`
+	Url  string `json:"url,omitempty"`
 }
-
 
 type Success struct {
 	Response ImportResponse `json:"success"`
 }
 
 type ImportResponse struct {
-	Page string `json:"page"`
+	Page  string `json:"page"`
 	Files struct {
-		     Gif string `json:"gif"`
-		     Jpg string `json:"jpg"`
-		     Mp4 string `json:"mp4"`
-		     Webm string `json:"webm"`
-	     } `json:"files"`
+		Gif  string `json:"gif"`
+		Jpg  string `json:"jpg"`
+		Mp4  string `json:"mp4"`
+		Webm string `json:"webm"`
+	} `json:"files"`
 	Oembed string `json:"oembed"`
-	Embed string `json:"embed"`
-	Meta struct {
-		     Duration string `json:"duration"`
-		     Height string `json:"height"`
-		     Width string `json:"width"`
-	     } `json:"meta"`
+	Embed  string `json:"embed"`
+	Meta   struct {
+		Duration string `json:"duration"`
+		Height   string `json:"height"`
+		Width    string `json:"width"`
+	} `json:"meta"`
 }
 
-
-func (r *ImportResponse) Gif() string {
-	return r.Files.Gif
+func (r *ImportResponse) SaveGif() string {
+	file := DownloadFile("newgif.gif", r.Files.Gif)
+	return file
 }
 
-func (r *ImportResponse) Jpg() string {
-	return r.Files.Jpg
-}
-
-func (r *ImportResponse) Mp4() string {
-	return r.Files.Mp4
-}
-
-func checkErr(e error){
-
-}
-
-
-func (i *Import) Create() (*ImportResponse, error)  {
+func (i *New) Create() (*ImportResponse, error) {
 	var err error
 	req, err := json.Marshal(i)
 	if err != nil {
@@ -83,7 +70,7 @@ func (i *Import) Create() (*ImportResponse, error)  {
 		return nil, err
 	}
 	var d Success
-	json.Unmarshal(res,&d)
+	json.Unmarshal(res, &d)
 	return &d.Response, err
 }
 
@@ -96,7 +83,7 @@ func SendRequest(input []byte, method string) ([]byte, error) {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		fmt.Println("Could not connect to server at: ",ApiEndpoint)
+		fmt.Println("Could not connect to server at: ", ApiEndpoint)
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
@@ -105,9 +92,7 @@ func SendRequest(input []byte, method string) ([]byte, error) {
 	return body, err
 }
 
-
-
-func (i *Import) Upload() (*ImportResponse, error)  {
+func (i *New) Upload() (*ImportResponse, error) {
 	var err error
 	res, err := UploadRequest(i, i.File)
 	if err != nil {
@@ -115,14 +100,14 @@ func (i *Import) Upload() (*ImportResponse, error)  {
 	}
 	fmt.Println(res)
 	var d Success
-	json.Unmarshal(res,&d)
+	json.Unmarshal(res, &d)
 	return &d.Response, err
 
 }
 
-func UploadRequest(i *Import, fileName string) ([]byte, error) {
+func UploadRequest(i *New, fileName string) ([]byte, error) {
 	path, _ := os.Getwd()
-	path += "/"+fileName
+	path += "/" + fileName
 	file, err := os.Open(path)
 	if err != nil {
 		return nil, err
@@ -162,4 +147,48 @@ func UploadRequest(i *Import, fileName string) ([]byte, error) {
 	}
 
 	return body.Bytes(), err
+}
+
+
+func DownloadFile(n string, rawURL string) string {
+
+	fileURL, err := url.Parse(rawURL)
+
+	if err != nil {
+		panic(err)
+	}
+
+	path := fileURL.Path
+
+	segments := strings.Split(path, "/")
+
+	fileName := segments[4]
+
+	file, err := os.Create(n)
+
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+
+	check := http.Client{
+		CheckRedirect: func(r *http.Request, via []*http.Request) error {
+			r.URL.Opaque = r.URL.Path
+			return nil
+		},
+	}
+
+	resp, err := check.Get(rawURL) // add a filter to check redirect
+
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+
+	io.Copy(file, resp.Body)
+
+	if err != nil {
+		panic(err)
+	}
+	return fileName
 }

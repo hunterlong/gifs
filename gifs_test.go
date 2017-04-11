@@ -1,47 +1,44 @@
 package gifs
 
 import (
-	"testing"
-	"net/url"
-	"strings"
-	"os"
 	"io"
 	"net/http"
+	"net/url"
+	"os"
+	"strings"
+	"testing"
 )
-
 
 func init() {
 	Authentication = os.Getenv("AUTH")
 }
 
-
 func TestSimpleYoutube(t *testing.T) {
 
-	input := &Import{
+	file := &New{
 		Source: "https://www.youtube.com/watch?v=V6wrI6DEZFk",
 	}
 
-	response, err := input.Create()
+	response, err := file.Create()
 	if err != nil {
 		t.Fail()
 	}
 
-	t.Log("Gif URL: ",response.Files.Gif)
-	t.Log("Jpg URL: ",response.Files.Jpg)
-	t.Log("Mp4 URL: ",response.Files.Mp4)
-	t.Log("Page URL: ",response.Page)
-	t.Log("oEmbed URL: ",response.Oembed)
-	t.Log("Embed URL: ",response.Embed)
+	t.Log("Gif URL: ", response.Files.Gif)
+	t.Log("Jpg URL: ", response.Files.Jpg)
+	t.Log("Mp4 URL: ", response.Files.Mp4)
+	t.Log("Page URL: ", response.Page)
+	t.Log("oEmbed URL: ", response.Oembed)
+	t.Log("Embed URL: ", response.Embed)
 
 }
 
-
 func TestYoutube(t *testing.T) {
 
-	input := &Import{
+	input := &New{
 		Source: "https://www.youtube.com/watch?v=dDmQ0byhus4",
-		Title: "Cute Kitten Drinking From Sink",
-		Tags: []string{"cute","kitten","drinking"},
+		Title:  "Cute Kitten Drinking From Sink",
+		Tags:   []string{"cute", "kitten", "drinking"},
 		Attribution: &Attribution{
 			Site: "twitter",
 			User: "stronghold2d",
@@ -54,16 +51,14 @@ func TestYoutube(t *testing.T) {
 		t.Fail()
 	}
 
-	t.Log("Gif URL: ",response.Files.Gif)
-	t.Log("Jpg URL: ",response.Files.Jpg)
-	t.Log("Mp4 URL: ",response.Files.Mp4)
-	t.Log("Page URL: ",response.Page)
-	t.Log("oEmbed URL: ",response.Oembed)
-	t.Log("Embed URL: ",response.Embed)
+	t.Log("Gif URL: ", response.Files.Gif)
+	t.Log("Jpg URL: ", response.Files.Jpg)
+	t.Log("Mp4 URL: ", response.Files.Mp4)
+	t.Log("Page URL: ", response.Page)
+	t.Log("oEmbed URL: ", response.Oembed)
+	t.Log("Embed URL: ", response.Embed)
 
 }
-
-
 
 func TestDownload(t *testing.T) {
 
@@ -73,13 +68,12 @@ func TestDownload(t *testing.T) {
 
 }
 
-
 func TestUpload(t *testing.T) {
 
-	input := &Import{
-		File: "echo-hereweare.mp4",
+	input := &New{
+		File:  "echo-hereweare.mp4",
 		Title: "Echo Here We Are",
-		Tags: []string{"echo","here","we"},
+		Tags:  []string{"echo", "here", "we"},
 	}
 
 	response, err := input.Upload()
@@ -87,55 +81,28 @@ func TestUpload(t *testing.T) {
 		panic(err)
 	}
 
-	t.Log("Gif URL: ",response.Files.Gif)
-	t.Log("Jpg URL: ",response.Files.Jpg)
-	t.Log("Mp4 URL: ",response.Files.Mp4)
-	t.Log("Page URL: ",response.Page)
-	t.Log("oEmbed URL: ",response.Oembed)
-	t.Log("Embed URL: ",response.Embed)
+	t.Log("Gif URL: ", response.Files.Gif)
+	t.Log("Jpg URL: ", response.Files.Jpg)
+	t.Log("Mp4 URL: ", response.Files.Mp4)
+	t.Log("Page URL: ", response.Page)
+	t.Log("oEmbed URL: ", response.Oembed)
+	t.Log("Embed URL: ", response.Embed)
 }
 
 
+func TestSaveGif(t *testing.T) {
 
-func DownloadFile(n string, rawURL string) string {
+	file := &New{
+		Source: "https://www.youtube.com/watch?v=V6wrI6DEZFk",
+	}
 
-	fileURL, err := url.Parse(rawURL)
-
+	response, err := file.Create()
 	if err != nil {
-		panic(err)
+		t.Fail()
 	}
 
-	path := fileURL.Path
+	gifFile := response.SaveGif()
 
-	segments := strings.Split(path, "/")
+	t.Log("Saved gif: ",gifFile)
 
-	fileName := segments[4]
-
-	file, err := os.Create(n)
-
-	if err != nil {
-		panic(err)
-	}
-	defer file.Close()
-
-	check := http.Client{
-		CheckRedirect: func(r *http.Request, via []*http.Request) error {
-			r.URL.Opaque = r.URL.Path
-			return nil
-		},
-	}
-
-	resp, err := check.Get(rawURL) // add a filter to check redirect
-
-	if err != nil {
-		panic(err)
-	}
-	defer resp.Body.Close()
-
-	io.Copy(file, resp.Body)
-
-	if err != nil {
-		panic(err)
-	}
-	return fileName
 }
