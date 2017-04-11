@@ -13,9 +13,18 @@ Gifs.com API is already easy, but this simplifies it even more. You'll be able t
 
 <p></p>
 
+# Install
+```go
+go get -u github.com/hunterlong/gifs
+```
+
+```go
+import "github.com/hunterlong/gifs"
+```
+
 # Simple Usage
 ```go
-input := &Import{
+input := &gifs.New{
   Source: "https://www.youtube.com/watch?v=dDmQ0byhus4",
 }
 
@@ -26,7 +35,7 @@ fmt.Println("Gifs.com Gif URL: ",response.Files.Gif)
 
 # Advanced Usage
 ```go
-input := &Import{
+input := &gifs.New{
   Source: "https://www.youtube.com/watch?v=dDmQ0byhus4",
   Title: "Cute Kitten Drinking From Sink",
   Tags: []string{"cute","kitten","drinking"},
@@ -38,4 +47,33 @@ input := &Import{
 }
 
 response, err := input.Create()
+if err != nil {
+    panic(err)
+}
+
+fmt.Println("Gif URL: ", response.Files.Gif)
+fmt.Println("Jpg URL: ", response.Files.Jpg)
+fmt.Println("Mp4 URL: ", response.Files.Mp4)
+fmt.Println("Page URL: ", response.Page)
+fmt.Println("oEmbed URL: ", response.Oembed)
+fmt.Println("Embed URL: ", response.Embed)
+```
+
+# Saving gif
+```go
+file := &gifs.New{
+    Source: "https://www.youtube.com/watch?v=V6wrI6DEZFk",
+}
+
+response, _ := file.Create()
+
+gifFile := response.SaveGif()
+
+fmt.Println("Saved gif: ", gifFile)
+
+```
+
+# Bulk Upload
+```go
+// work in progress!
 ```
