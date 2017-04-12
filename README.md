@@ -92,4 +92,29 @@ fmt.Println("Gif URL: ", response.Files.Gif)
 # Bulk Upload
 ```go
 // work in progress!
+files := gift.[]New{
+    {
+        File:  "video1.mp4",
+        Title: "New Video",
+    },
+    {
+        File:  "video2.mp4",
+        Title: "New Video 2",
+    },
+    {
+        File:  "video3.mp4",
+        Title: "New Video 3",
+    },
+}
+
+bulk := Bulk{
+    New: files,
+}
+
+response, err := bulk.Upload()
+if err != nil {
+    panic(err)
+}
+
+fmt.Println(response)
 ```
