@@ -101,7 +101,7 @@ fmt.Println("Gif URL: ", response.Files.Gif)
 ```
 
 # Bulk Upload
-Now I've got the hang of it, I don't need to go one-by-one. Include an array of New files, and Upload!
+Now I've got the hang of it, I don't need to go one-by-one. Include an array of New files, and Upload! The response will give you an array for each uploaded file.
 <img width="300" align="right" src="https://j.gifs.com/nZAYM5.gif">
 
 ```go
@@ -136,3 +136,6 @@ for k, v := range response {
 
 fmt.Println("Uploaded", len(response), "Files")
 ```
+
+# License
+Fun project :boom: How often do you see gifs on github!? Released MIT license with testing.
