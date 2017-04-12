@@ -1,15 +1,17 @@
-# gifs.com Golang Package
+# [gifs.com](https://gifs.com) Golang Package
 
 <img width="400" align="right" src="https://j.gifs.com/r0G8wW.gif">
 
 [![Build Status](https://travis-ci.org/hunterlong/gifs.svg?branch=master)](https://travis-ci.org/hunterlong/gifs) [![Coverage Status](https://coveralls.io/repos/github/hunterlong/gifs/badge.svg?branch=master)](https://coveralls.io/github/hunterlong/gifs?branch=master) [![GoDoc](https://godoc.org/github.com/hunterlong/gifs?status.svg)](https://godoc.org/github.com/hunterlong/gifs) [![Go Report Card](https://goreportcard.com/badge/github.com/hunterlong/gifs)](https://goreportcard.com/report/github.com/hunterlong/gifs)
 
-Golang is awesome, and so are gifs. Using gifs.com API you can create gifs from many many different sources.
+Golang is awesome, and so are gifs. Using [gifs.com API](http://docs.gifs.com/docs/getting-started) you can create gifs from many many different sources.
 Gifs.com API is already easy, but this simplifies it even more. You'll be able to create basic gifs, and more complex functionality based on your application.
 
-:white_check_mark: Create gifs via URL
+:white_check_mark: Create gifs via URL (youtube, vimeo, remote mp4, etc)
 
-:white_check_mark: Upload file and create gif
+:white_check_mark: Upload mp4/image & Bulk Upload
+
+Gifs.com allows you to send any instagram, twitter, facebook, vine, .gif, .mp4, .webm, giphy, imgur, gfycat, or streamable links. :thumbsup:
 
 <p></p>
 
@@ -23,6 +25,12 @@ import "github.com/hunterlong/gifs"
 ```
 
 # Simple Usage
+Be :sunglasses: and use API keys for added features and limits. [gifs.com Authentication](http://docs.gifs.com/docs/authentication-key)  API does *not* require keys.
+```go
+gifs.Authentication = "gifs00YOURkey2929"
+```
+
+Let's make a gif from a YouTube video.
 ```go
 input := &gifs.New{
   Source: "https://www.youtube.com/watch?v=dDmQ0byhus4",
@@ -34,6 +42,7 @@ fmt.Println("Gifs.com Gif URL: ",response.Files.Gif)
 ```
 
 # Advanced Usage
+You can add all the gifs.com attributes and even tag the gif with a user. There's even a 'safe' option.
 ```go
 input := &gifs.New{
   Source: "https://www.youtube.com/watch?v=dDmQ0byhus4",
@@ -60,6 +69,7 @@ fmt.Println("Embed URL: ", response.Embed)
 ```
 
 # Saving gif
+You've seen the responses from gifs.com API, but now I'd like to download the gif and save it locally.
 ```go
 file := &gifs.New{
     Source: "https://www.youtube.com/watch?v=V6wrI6DEZFk",
@@ -70,10 +80,10 @@ response, _ := file.Create()
 gifFile := response.SaveGif()
 
 fmt.Println("Saved gif: ", gifFile)
-
 ```
 
 # Upload MP4
+Oh whaaat. I have a mp4 file named 'video.mp4' in my current directory and I'd love to have it as a gif.
 ```go
 input := &gifs.New{
     File:  "video.mp4",
@@ -90,9 +100,10 @@ fmt.Println("Gif URL: ", response.Files.Gif)
 ```
 
 # Bulk Upload
+Now I've got the hang of it, I don't need to go one-by-one. Include an array of New files, and Upload!
 ```go
 // work in progress!
-files := gift.[]New{
+files := []gifs.New{
     {
         File:  "video1.mp4",
         Title: "New Video",
@@ -107,7 +118,7 @@ files := gift.[]New{
     },
 }
 
-bulk := Bulk{
+bulk := gifs.Bulk{
     New: files,
 }
 
@@ -116,5 +127,9 @@ if err != nil {
     panic(err)
 }
 
-fmt.Println(response)
+for k, v := range response {
+    fmt.Println("File #", k, " Uploaded. File Gif: ", v.Files.Gif)
+}
+
+fmt.Println("Uploaded", len(response), "Files")
 ```
