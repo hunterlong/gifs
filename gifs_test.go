@@ -156,6 +156,10 @@ func TestBulkUpload(t *testing.T) {
 		t.Fail()
 	}
 
+	if len(response) != 3 {
+		t.Fail()
+	}
+
 	for k, v := range response {
 		t.Log("Upload", k, "- File Gif: ", v.Files.Gif)
 	}
