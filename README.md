@@ -101,8 +101,9 @@ fmt.Println("Gif URL: ", response.Files.Gif)
 ```
 
 # Bulk Upload
-<img width="300" align="right" src="https://j.gifs.com/nZAYM5.gif">
 Now I've got the hang of it, I don't need to go one-by-one. Include an array of New files, and Upload!
+<img width="300" align="right" src="https://j.gifs.com/nZAYM5.gif">
+
 ```go
 // work in progress!
 files := []gifs.New{
