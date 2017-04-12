@@ -98,7 +98,8 @@ func SendRequest(input []byte, method string) ([]byte, error) {
 	return body, err
 }
 
-func (i *Bulk) Upload() (*ImportResponse, error) {
+func (i *Bulk) Upload() ([]ImportResponse, error) {
+	var array []ImportResponse
 	for _, v := range i.New {
 		log.Println("Uploading file: ", v.File)
 		response, err := v.Upload()
@@ -106,9 +107,10 @@ func (i *Bulk) Upload() (*ImportResponse, error) {
 			log.Println("Failed to Upload: ", v.File)
 		} else {
 			log.Println("Successful Upload: ", response)
+			array = append(array, *response)
 		}
 	}
-	return nil, nil
+	return array, nil
 }
 
 func (i *New) Upload() (*ImportResponse, error) {

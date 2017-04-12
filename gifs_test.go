@@ -20,6 +20,14 @@ func TestSimpleYoutube(t *testing.T) {
 		t.Fail()
 	}
 
+	if response.Files.Gif == "" {
+		t.Fail()
+	}
+
+	if response.Embed == "" {
+		t.Fail()
+	}
+
 	t.Log("Gif URL: ", response.Files.Gif)
 	t.Log("Jpg URL: ", response.Files.Jpg)
 	t.Log("Mp4 URL: ", response.Files.Mp4)
@@ -47,6 +55,10 @@ func TestYoutube(t *testing.T) {
 		t.Fail()
 	}
 
+	if response.Files.Gif == "" {
+		t.Fail()
+	}
+
 	t.Log("Gif URL: ", response.Files.Gif)
 	t.Log("Jpg URL: ", response.Files.Jpg)
 	t.Log("Mp4 URL: ", response.Files.Mp4)
@@ -60,7 +72,11 @@ func TestDownload(t *testing.T) {
 
 	file := DownloadFile("echo-hereweare.mp4", "https://raw.githubusercontent.com/mediaelement/mediaelement-files/master/echo-hereweare.mp4")
 
-	t.Log(file)
+	if file == "" {
+		t.Fail()
+	}
+
+	t.Log("Downloaded File: ", file)
 
 }
 
@@ -74,7 +90,15 @@ func TestUpload(t *testing.T) {
 
 	response, err := input.Upload()
 	if err != nil {
-		panic(err)
+		t.Fail()
+	}
+
+	if response.Files.Gif == "" {
+		t.Fail()
+	}
+
+	if response.Embed == "" {
+		t.Fail()
 	}
 
 	t.Log("Gif URL: ", response.Files.Gif)
@@ -97,6 +121,10 @@ func TestSaveGif(t *testing.T) {
 	}
 
 	gifFile := response.SaveGif()
+
+	if gifFile == "" {
+		t.Fail()
+	}
 
 	t.Log("Saved gif: ", gifFile)
 
@@ -125,9 +153,11 @@ func TestBulkUpload(t *testing.T) {
 
 	response, err := bulk.Upload()
 	if err != nil {
-
+		t.Fail()
 	}
 
-	t.Log(response)
+	for k, v := range response {
+		t.Log("Upload", k, "- File Gif: ", v.Files.Gif)
+	}
 
 }
