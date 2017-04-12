@@ -70,6 +70,7 @@ fmt.Println("Embed URL: ", response.Embed)
 
 # Saving gif
 You've seen the responses from gifs.com API, but now I'd like to download the gif and save it locally.
+<img width="300" align="right" src="https://j.gifs.com/2RpGgv.gif">
 ```go
 file := &gifs.New{
     Source: "https://www.youtube.com/watch?v=V6wrI6DEZFk",
