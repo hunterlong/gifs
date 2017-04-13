@@ -9,7 +9,11 @@ Gifs.com API is already easy, but this simplifies it even more. You'll be able t
 
 :white_check_mark: Create gifs via URL (youtube, vimeo, remote mp4, etc)
 
-:white_check_mark: Upload mp4/image & Bulk Upload
+:white_check_mark: Upload mp4/image & Download gif
+
+:white_check_mark: Bulk Upload
+
+:white_check_mark: Trim gif (start/end in seconds)
 
 Gifs.com allows you to send any instagram, twitter, facebook, vine, .gif, .mp4, .webm, giphy, imgur, gfycat, or streamable links. :thumbsup:
 
