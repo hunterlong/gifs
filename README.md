@@ -1,6 +1,6 @@
 # [gifs.com](https://gifs.com) Golang Package
 
-<img width="400" align="right" src="https://j.gifs.com/r0G8wW.gif">
+<img width="160" align="right" src="https://j.gifs.com/wjN768.gif">
 
 [![Build Status](https://travis-ci.org/hunterlong/gifs.svg?branch=master)](https://travis-ci.org/hunterlong/gifs) [![Coverage Status](https://coveralls.io/repos/github/hunterlong/gifs/badge.svg?branch=master)](https://coveralls.io/github/hunterlong/gifs?branch=master) [![GoDoc](https://godoc.org/github.com/hunterlong/gifs?status.svg)](https://godoc.org/github.com/hunterlong/gifs) [![Go Report Card](https://goreportcard.com/badge/github.com/hunterlong/gifs)](https://goreportcard.com/report/github.com/hunterlong/gifs)
 
