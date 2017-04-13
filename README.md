@@ -42,7 +42,7 @@ fmt.Println("Gifs.com Gif URL: ",response.Files.Gif)
 ```
 
 # Advanced Usage
-You can add all the gifs.com attributes and even tag the gif with a user. There's even a 'safe' option.
+You can add all the gifs.com attributes and even tag the gif with a user. You can trim your gif by inserting start and end in seconds. There's even a 'safe' option.
 ```go
 input := &gifs.New{
   Source: "https://www.youtube.com/watch?v=dDmQ0byhus4",
@@ -51,6 +51,10 @@ input := &gifs.New{
   Attribution: &Attribution{
     Site: "twitter",
     User: "stronghold2d",
+  },
+  Trim: &Trim{
+    Start: 10,
+    End:   20,
   },
   Safe: true,
 }
