@@ -47,6 +47,10 @@ func TestYoutube(t *testing.T) {
 			Site: "twitter",
 			User: "stronghold2d",
 		},
+		Trim: &Trim{
+			Start: 10,
+			End:   20,
+		},
 		Safe: true,
 	}
 

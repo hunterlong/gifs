@@ -26,7 +26,13 @@ type New struct {
 	Title       string       `json:"title,omitempty"`
 	Tags        []string     `json:"tags,omitempty"`
 	Attribution *Attribution `json:"attribution,omitempty"`
+	Trim        *Trim        `json:"trim,omitempty"`
 	Safe        bool         `json:"nsfw,omitempty"`
+}
+
+type Trim struct {
+	Start int `json:"start,omitempty"`
+	End   int `json:"end,omitempty"`
 }
 
 type Attribution struct {
